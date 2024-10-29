@@ -26,34 +26,58 @@
 <button id="notify-btn">Enable Notifications</button>
 
 <script>
-  // Request permission to show notifications
-  function requestNotificationPermission() {
+  const notifyBtn = document.getElementById("notify-btn");
+
+  // Check if notifications are supported and request permission if necessary
+  function checkNotificationPermission() {
     if (!("Notification" in window)) {
       alert("This browser does not support notifications.");
       return;
     }
 
+    // Check the current notification permission
+    if (Notification.permission === "granted") {
+      // Start notifications immediately if already granted
+      startNotifications();
+      notifyBtn.style.display = "none";
+    } else if (Notification.permission === "default") {
+      // Show button to request permission if not yet decided
+      notifyBtn.style.display = "block";
+    } else {
+      alert("Notification permission was denied.");
+    }
+  }
+
+  // Request permission to show notifications and start sending them
+  function requestNotificationPermission() {
     Notification.requestPermission().then(permission => {
+      console.log("Notification permission:", permission);
       if (permission === "granted") {
+        alert("Notifications enabled!");
         startNotifications();
+        notifyBtn.style.display = "none";
       } else {
         alert("You need to allow notifications for this to work.");
       }
-    });
+    }).catch(error => console.log("Permission error:", error));
   }
 
-  // Function to send notification every minute
+  // Function to send a notification every minute
   function startNotifications() {
     setInterval(() => {
+      console.log("Sending notification");
       new Notification("Time Notification", {
         body: "Another minute has passed!",
-        icon: "https://example.com/icon.png"
+        icon: "https://via.placeholder.com/64"
       });
     }, 6000); // 60000 ms = 1 minute
   }
 
-  // Add event listener to button to enable notifications
-  document.getElementById("notify-btn").addEventListener("click", requestNotificationPermission);
+  // Add event listener to button to request notification permission
+  notifyBtn.addEventListener("click", requestNotificationPermission);
+
+  // Initial check for notification permission
+  checkNotificationPermission();
 </script>
 
 </body>
