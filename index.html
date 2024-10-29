@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notification Every Minute</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+    #notify-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<button id="notify-btn">Enable Notifications</button>
+
+<script>
+  // Request permission to show notifications
+  function requestNotificationPermission() {
+    if (!("Notification" in window)) {
+      alert("This browser does not support notifications.");
+      return;
+    }
+
+    Notification.requestPermission().then(permission => {
+      if (permission === "granted") {
+        startNotifications();
+      } else {
+        alert("You need to allow notifications for this to work.");
+      }
+    });
+  }
+
+  // Function to send notification every minute
+  function startNotifications() {
+    setInterval(() => {
+      new Notification("Time Notification", {
+        body: "Another minute has passed!",
+        icon: "https://example.com/icon.png"
+      });
+    }, 6000); // 60000 ms = 1 minute
+  }
+
+  // Add event listener to button to enable notifications
+  document.getElementById("notify-btn").addEventListener("click", requestNotificationPermission);
+</script>
+
+</body>
+</html>
